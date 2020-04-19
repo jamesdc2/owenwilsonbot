@@ -15,8 +15,21 @@ client.on('message', message => {
         const attachment = new MessageAttachment('https://media.giphy.com/media/ZsQSYaXdrZNm/giphy.gif');
         message.channel.send(attachment)
             .then(message => console.log(`Sent message!`))
-            .catch(console.error);
+            .catch(error => console.error(error));
     }
 });
 
 client.login(process.env.DISCORD_TOKEN);
+
+process.on('beforeExit', code => {
+// Can make asynchronous calls
+    setTimeout(() => {
+        console.log(`Process will exit with code: ${code}`)
+        process.exit(code)
+    }, 100)
+});
+
+process.on('exit', code => {
+    // Only synchronous calls
+    console.log(`Process exited with code: ${code}`)
+});
