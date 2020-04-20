@@ -1,1 +1,1 @@
-web:node oh-wow.js
+worker: node oh-wow.js
