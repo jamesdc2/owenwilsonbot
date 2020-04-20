@@ -1,8 +1,11 @@
 {
   "name": "owenwilsonbot",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "a really cool bot",
+  "main": "oh-wow.js",
+  "engines": {
+    "node": "12.16.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node oh-wow.js"
