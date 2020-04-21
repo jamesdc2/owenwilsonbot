@@ -2,14 +2,14 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
-console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+var moment = require('moment');
 
-const { Client, MessageAttachment, MessageEmbed} = require("discord.js");
+const { Client, MessageAttachment} = require("discord.js");
 
 const client = new Client();
 
 client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`)
+    console.log(`Logged in as ${client.user.tag} at ${moment().format()}!`)
 });
 
 client.on('message', message => {
@@ -18,7 +18,7 @@ client.on('message', message => {
         // Send the gif to the same channel
         const attachment = new MessageAttachment('https://media.giphy.com/media/ZsQSYaXdrZNm/giphy.gif');
         message.channel.send(attachment)
-            .then(message => console.log(`Sent message!`))
+            .then(message => console.log(`Sent gif to channel #${message.channel.name} at ${moment().format()}!`))
             .catch(error => console.error(error));
     }
 });
