@@ -21,6 +21,15 @@ client.on('message', message => {
             .then(message => console.log(`Sent gif to channel #${message.channel.name} at ${moment().format()}!`))
             .catch(error => console.error(error));
     }
+
+    if (message.content.toLowerCase() === "!rollcall")
+    {
+        const attachment = new MessageAttachment('https://media.giphy.com/media/2YtTdoSEl4m4/giphy.gif');
+        message.channel.send(attachment)
+            .then(message => console.log(`Sent gif and roll call message to channel #${message.channel.name} at ${moment().format()}!`))
+            .catch(error => console.error(error));
+        message.channel.send("@everyone who's gaming tonight?");
+    }
 });
 
 client.login(process.env.DISCORD_TOKEN);
