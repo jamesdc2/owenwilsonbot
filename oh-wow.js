@@ -8,19 +8,26 @@ const { Client, MessageAttachment} = require("discord.js");
 
 const client = new Client();
 
+var keywords = require('./keywords.json');
+keywords.forEach((item) => {
+    console.log(`keyword: ${item.keyword}, gif: ${item.gif}`);
+});
+
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at ${moment().format()}!`)
 });
 
 client.on('message', message => {
-    // If the message is "oh wow"
-    if (message.content.toLowerCase().indexOf('oh wow') >= 0) {
-        // Send the gif to the same channel
-        const attachment = new MessageAttachment('https://media.giphy.com/media/ZsQSYaXdrZNm/giphy.gif');
-        message.channel.send(attachment)
-            .then(message => console.log(`Sent gif to channel #${message.channel.name} at ${moment().format()}!`))
-            .catch(error => console.error(error));
-    }
+    
+    // process keywords from the file
+    keywords.forEach((item) => {
+        if (message.content.toLowerCase().indexOf(item.keyword) >= 0) {
+            const attachment = new MessageAttachment(item.gif);
+            message.channel.send(attachment)
+                .then(message => console.log(`Sent gif to channel #${message.channel.name} at ${moment().format()}!`))
+                .catch(error => console.error(error));
+        }
+    });
 
     if (message.content.toLowerCase() === "!rollcall")
     {
