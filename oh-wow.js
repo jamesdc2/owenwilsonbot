@@ -44,7 +44,7 @@ client.on('message', message => {
             .then(message => console.log(`${message.member.nickname} tried to say ${message.content} at ${moment().format()}!`))
             .catch(error => console.error(error));
 
-        message.channel.send(`${message.author.toString()} tried to say something but the cone of shame prevents them from speaking!`)
+        message.channel.send(`${message.author.toString()} tried to say something, but the cone of shame prevents them from speaking!`)
             .catch(error => console.error(error));
     }
 });
