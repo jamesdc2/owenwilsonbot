@@ -37,6 +37,16 @@ client.on('message', message => {
             .catch(error => console.error(error));
         message.channel.send("@everyone who's gaming tonight?");
     }
+
+    if (message.member.roles.cache.find(r => r.name === "cone of shame"))
+    {
+        message.delete()
+            .then(message => console.log(`${message.member.nickname} tried to say ${message.content} at ${moment().format()}!`))
+            .catch(error => console.error(error));
+
+        message.channel.send(`${message.author.toString()} tried to say something but the cone of shame prevents them from speaking!`)
+            .catch(error => console.error(error));
+    }
 });
 
 client.login(process.env.DISCORD_TOKEN);
