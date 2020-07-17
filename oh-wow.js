@@ -49,6 +49,41 @@ client.on('message', message => {
     }
 });
 
+client.on('guildMemberUpdate', (oldMember, newMember) => {
+    const channel = oldMember.guild.channels.cache.find(r => r.name === "general");
+
+    // Cone of Shame is added
+    if (oldMember.roles.cache.size < newMember.roles.cache.size) {
+        for (const role of newMember.roles.cache.map(r => r.id))
+        {
+            if (!oldMember.roles.cache.has(role) && newMember.roles.cache.get(role).name === "cone of shame") {
+                channel.send(`The cone of shame has been placed on ${newMember.user.toString()}`)
+                    .then(message => console.log(`Cone of shame was placed on ${message.mentions.users.first().username} at ${moment().format()}!`))
+                    .catch(error => console.error(error));
+                
+                const attachment = new MessageAttachment('https://media.giphy.com/media/ysh3Vdn9DcuGI/giphy.gif');
+                channel.send(attachment);
+                
+                break;
+            }
+        }
+    }
+
+    // cone of shame removed
+    if (oldMember.roles.cache.size > newMember.roles.cache.size) {
+        for (const role of oldMember.roles.cache.map(r => r.id))
+        {
+            if (!newMember.roles.cache.has(role) && oldMember.roles.cache.get(role).name === "cone of shame") {
+                channel.send(`The cone of shame has been removed from ${newMember.user.toString()}`)
+                    .then(message => console.log(`Cone of shame was removed from ${message.mentions.users.first().username} at ${moment().format()}!`))
+                    .catch(error => console.error(error));      
+                
+                break;
+            }
+        }
+    }
+});
+
 client.login(process.env.DISCORD_TOKEN);
 
 process.on('beforeExit', code => {
