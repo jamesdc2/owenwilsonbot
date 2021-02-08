@@ -69,6 +69,22 @@ client.on('message', message => {
     }
 });
 
+client.on('messageReactionAdd', async (reaction, user) => {
+
+    // reacting to a bot message
+    //   and reaction emoji is 🚨
+    //   and the user is not a bot
+    if (reaction.message.author.bot && reaction.emoji.name === "🚨" && !user.bot)
+    {
+        const role = reaction.message.guild.roles.cache.find(r => r.name === "Bad Boi");
+
+        const member = reaction.message.guild.members.cache.find(member => member.id === user.id )
+
+        member.roles.add(role);
+    } 
+
+});
+
 client.on('guildMemberUpdate', (oldMember, newMember) => {
     const channel = oldMember.guild.channels.cache.find(r => r.name === "general");
 
