@@ -81,7 +81,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
         const member = reaction.message.guild.members.cache.find(member => member.id === user.id )
 
         member.roles.add(role);
-        console.log(`Added BAD BOI role to ${user.displayName}`)
+        console.log(`Added BAD BOI role to ${member.displayName}`)
     } 
 
 });
@@ -98,7 +98,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
         const member = reaction.message.guild.members.cache.find(member => member.id === user.id )
 
         member.roles.remove(role)
-        console.log(`Removed BAD BOI role from ${user.DisplayName}`)
+        console.log(`Removed BAD BOI role from ${member.DisplayName}`)
     } 
 
 });
