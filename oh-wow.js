@@ -81,6 +81,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
         const member = reaction.message.guild.members.cache.find(member => member.id === user.id )
 
         member.roles.add(role);
+        console.log(`Added BAD BOI role to ${user.displayName}`)
     } 
 
 });
@@ -92,11 +93,12 @@ client.on('messageReactionRemove', async (reaction, user) => {
     //   and the user is not a bot
     if (reaction.message.author.bot && reaction.emoji.name === "🚨" && !user.bot)
     {
-        const role = reaction.message.guild.roles.cache.find(r => r.name === "Bad Boi");
+        const role = reaction.message.guild.roles.cache.find(r => r.name === "Bad Boi")
 
         const member = reaction.message.guild.members.cache.find(member => member.id === user.id )
 
-        member.roles.remove(role);
+        member.roles.remove(role)
+        console.log(`Removed BAD BOI role from ${user.DisplayName}`)
     } 
 
 });
