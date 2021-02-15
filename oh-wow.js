@@ -31,7 +31,7 @@ client.on('message', message => {
 
     if (message.content.toLowerCase() === "!rollcall")
     {
-        const attachment = new MessageAttachment('https://media.giphy.com/media/2YtTdoSEl4m4/giphy.gif');
+        const attachment = new MessageAttachment('https://media.giphy.com/media/BW4WWNqsaGqME/giphy.gif`');
         message.channel.send(attachment)
             .then(function(message) {
                 message.react("👍");
