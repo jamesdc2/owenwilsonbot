@@ -60,11 +60,17 @@ client.on('message', message => {
     }
     if (message.member.roles.cache.find(r => r.name === "cone of shame"))
     {
-        message.delete()
-            .then(message => console.log(`${message.member.nickname} tried to say ${message.content} at ${moment().format()}!`))
-            .catch(error => console.error(error));
+        
+        var input = message.content;
+        var mockingMessage = "";
+        for (i=0; i < input.length; i++)
+        {
+            mockingMessage += i % 2 == 0 ? input.charAt(i).toLowerCase() : input.charAt(i).toUpperCase();
+        }
 
-        message.channel.send(`${message.author.toString()} tried to say something, but the cone of shame prevents them from speaking!`)
+        const attachment = new MessageAttachment('https://media.giphy.com/media/QUXYcgCwvCm4cKcrI3/giphy.gif');
+        message.channel.send(attachment);
+        message.channel.send(`${mockingMessage}`)
             .catch(error => console.error(error));
     }
 });
