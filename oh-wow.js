@@ -3,6 +3,9 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 var moment = require('moment');
+var https = require('https');
+
+const valheimApi = "https://luz5lb10n1.execute-api.us-east-1.amazonaws.com/valheim?action=";
 
 const { Client, MessageAttachment} = require("discord.js");
 
@@ -28,6 +31,63 @@ client.on('message', message => {
                 .catch(error => console.error(error));
         }
     });
+
+    if (message.content.toLowerCase().startsWith("!valheim"))
+    {
+        try
+        {
+            let cmd = message.content.split(" ").slice(1)[0];
+            let valid = true;
+
+            // if valid command, send to the api
+            switch (cmd.toLowerCase())
+            {
+                case 'up':
+                    message.channel.send(`Sending command to start the Valheim server`);
+                    break;
+                case 'down':
+                    message.channel.send(`Sending command to stop the Valheim server`);
+                    break;
+                case 'info':
+                    message.channel.send(`Checking Valheim server status`);
+                    break;
+                case 'help':
+                    message.channel.send('Say !valheim info up or down');
+                    valid = false;
+                    break;
+                default:
+                    message.channel.send('Bruh.');
+                    valid = false;
+            }
+
+            // if valid command, send to API;
+            if (valid)
+            {
+                https.request(valheimApi + cmd, function(res){
+                    var body = '';
+
+                    //another chunk of data has been received, so append it to `str`
+                    res.on('data', function (chunk) {
+                        body += chunk;
+                    });
+                
+                    //the whole response has been received, so we just print it out here
+                    res.on('end', function () {
+                        let data = JSON.parse(body);
+                        message.channel.send(`The Green Squad Valheim server is currently **${data.state}**.`);
+                        if (data.state == 'running')
+                        {
+                            message.channel.send(`Ip address is ${data.ip} and password is "green87Squad"`)
+                        }
+                    });
+                }).end();
+            }
+        }
+        catch {
+            message.channel.send('Bruh?')
+        };
+
+    }
 
     if (message.content.toLowerCase() === "!rollcall")
     {
