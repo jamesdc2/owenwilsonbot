@@ -34,6 +34,14 @@ client.on('message', message => {
 
     if (message.content.toLowerCase().startsWith("!valheim"))
     {
+
+        // if not PCMR, deny
+        if ( !message.member.roles.cache.find(r => r.name === "PCMR"))
+        {
+            message.channel.send('Request from peseant is **denied**.');
+            return;
+        }        
+
         try
         {
             let cmd = message.content.split(" ").slice(1)[0];
