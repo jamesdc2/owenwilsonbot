@@ -38,7 +38,7 @@ client.on('message', message => {
         // if not PCMR, deny
         if ( !message.member.roles.cache.find(r => r.name === "PCMR"))
         {
-            message.channel.send('Request from peseant is **denied**.');
+            message.channel.send('Valheim does not currently support cross-play.');
             return;
         }        
 
