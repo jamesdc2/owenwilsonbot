@@ -3,13 +3,24 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 var moment = require('moment');
-var https = require('https');
 
-const valheimApi = "https://luz5lb10n1.execute-api.us-east-1.amazonaws.com/valheim?action=";
+const fs = require('fs')
+const Discord = require('discord.js');
+const Client = require('./client/Client');
 
-const { Client, MessageAttachment} = require("discord.js");
+const prefix = process.env.PREFIX;
 
 const client = new Client();
+client.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands').filter(files => files.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	client.commands.set(command.name, command);
+}
+
+console.log(client.commands);
 
 var keywords = require('./keywords.json');
 keywords.forEach((item) => {
@@ -21,111 +32,14 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-    
-    // process keywords from the file
-    keywords.forEach((item) => {
-        if (message.content.toLowerCase().indexOf(item.keyword) >= 0) {
-            const attachment = new MessageAttachment(item.gif);
-            message.channel.send(attachment)
-                .then(message => console.log(`Sent gif to channel #${message.channel.name} at ${moment().format()}!`))
-                .catch(error => console.error(error));
-        }
-    });
 
-    if (message.content.toLowerCase().startsWith("!valheim"))
-    {
+    const args = message.content.slice(prefix.length).split(/ +/);
+	const commandName = args.shift().toLowerCase();
+	const command = client.commands.get(commandName);
 
-        // if not PCMR, deny
-        if ( !message.member.roles.cache.find(r => r.name === "PCMR"))
-        {
-            message.channel.send('Valheim does not currently support cross-play.');
-            return;
-        }        
+    if (message.author.bot) return;
 
-        try
-        {
-            let cmd = message.content.split(" ").slice(1)[0];
-            let valid = true;
-
-            // if valid command, send to the api
-            switch (cmd.toLowerCase())
-            {
-                case 'up':
-                    message.channel.send(`Sending command to start the Valheim server`);
-                    break;
-                case 'down':
-                    message.channel.send(`Sending command to stop the Valheim server`);
-                    break;
-                case 'info':
-                    message.channel.send(`Checking Valheim server status`);
-                    break;
-                case 'help':
-                    message.channel.send('Say !valheim info up or down');
-                    valid = false;
-                    break;
-                default:
-                    message.channel.send('Bruh.');
-                    valid = false;
-            }
-
-            // if valid command, send to API;
-            if (valid)
-            {
-                https.request(valheimApi + cmd, function(res){
-                    var body = '';
-
-                    //another chunk of data has been received, so append it to `str`
-                    res.on('data', function (chunk) {
-                        body += chunk;
-                    });
-                
-                    //the whole response has been received, so we just print it out here
-                    res.on('end', function () {
-                        let data = JSON.parse(body);
-                        message.channel.send(`The Green Squad Valheim server is currently **${data.state}**.`);
-                        if (data.state == 'running')
-                        {
-                            message.channel.send(`Ip address is ${data.ip} and password is "green87Squad"`)
-                        }
-                    });
-                }).end();
-            }
-        }
-        catch {
-            message.channel.send('Bruh?')
-        };
-
-    }
-
-    if (message.content.toLowerCase() === "!rollcall")
-    {
-        const attachment = new MessageAttachment('https://media.giphy.com/media/l2JJvaMbxKrKtOWVa/giphy.gif');
-        message.channel.send(attachment)
-            .then(function(message) {
-                message.react("👍");
-                message.react("👎");
-                message.react("🚨");
-                console.log(`Sent gif and roll call message to channel #${message.channel.name} at ${moment().format()}!`);
-            })
-            .catch(error => console.error(error));
-        message.channel.send("@everyone who's gaming tonight?");
-    }
-    if (message.content.toLowerCase() === '!feelers')
-    {
-        const attachment = new MessageAttachment('https://media.giphy.com/media/26n6XsLU5UQ63c7V6/giphy.gif');
-        message.channel.send(attachment)
-            .then(message => console.log(`Sent gif and feelers message to channel #${message.channel.name} at ${moment().format()}!`))
-            .catch(error => console.error(error));
-        message.channel.send("@everyone who's thinking about gaming tonight?");
-    }
-    if (message.content.toLowerCase() === '!quickie')
-    {
-        const attachment = new MessageAttachment('https://media.giphy.com/media/cCalRsU3yKZoQILEEI/giphy.gif');
-        message.channel.send(attachment)
-            .then(message => console.log(`Sent gif and quickie message to channel #${message.channel.name} at ${moment().format()}!`))
-            .catch(error => console.error(error));
-        message.channel.send("@everyone who's ready to game rn??");
-    }
+    // Re-format the message if being sent by a cone of shame wearer
     if (message.member.roles.cache.find(r => r.name === "cone of shame"))
     {
         
@@ -141,6 +55,30 @@ client.on('message', message => {
         message.channel.send(`${mockingMessage}`)
             .catch(error => console.error(error));
     }
+
+    // process keywords from the file
+    keywords.forEach((item) => {
+        if (message.content.toLowerCase().indexOf(item.keyword) >= 0) {
+            const attachment = new MessageAttachment(item.gif);
+            message.channel.send(attachment)
+                .then(message => console.log(`Sent gif to channel #${message.channel.name} at ${moment().format()}!`))
+                .catch(error => console.error(error));
+        }
+    });
+
+    if (!message.content.startsWith(prefix)) return;
+
+	try {
+		if(commandName == "ban" || commandName == "userinfo") {
+			command.execute(message, client);
+		} else {
+			command.execute(message);
+		}
+	} catch (error) {
+		console.error(error);
+		message.reply('There was an error trying to execute that command!');
+	}
+
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
