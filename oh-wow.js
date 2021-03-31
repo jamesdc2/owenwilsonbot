@@ -50,7 +50,7 @@ client.on('message', message => {
             mockingMessage += i % 2 == 0 ? input.charAt(i).toLowerCase() : input.charAt(i).toUpperCase();
         }
 
-        const attachment = new MessageAttachment('https://media.giphy.com/media/QUXYcgCwvCm4cKcrI3/giphy.gif');
+        const attachment = new Discord.MessageAttachment('https://media.giphy.com/media/QUXYcgCwvCm4cKcrI3/giphy.gif');
         message.channel.send(attachment);
         message.channel.send(`${mockingMessage}`)
             .catch(error => console.error(error));
@@ -59,7 +59,7 @@ client.on('message', message => {
     // process keywords from the file
     keywords.forEach((item) => {
         if (message.content.toLowerCase().indexOf(item.keyword) >= 0) {
-            const attachment = new MessageAttachment(item.gif);
+            const attachment = new Discord.MessageAttachment(item.gif);
             message.channel.send(attachment)
                 .then(message => console.log(`Sent gif to channel #${message.channel.name} at ${moment().format()}!`))
                 .catch(error => console.error(error));
@@ -127,7 +127,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
                     .then(message => console.log(`Cone of shame was placed on ${message.mentions.users.first().username} at ${moment().format()}!`))
                     .catch(error => console.error(error));
                 
-                const attachment = new MessageAttachment('https://media.giphy.com/media/ysh3Vdn9DcuGI/giphy.gif');
+                const attachment = new Discord.MessageAttachment('https://media.giphy.com/media/ysh3Vdn9DcuGI/giphy.gif');
                 channel.send(attachment);
                 
                 break;
