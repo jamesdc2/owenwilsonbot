@@ -1,8 +1,11 @@
+const Discord = require('discord.js');
+var moment = require('moment');
+
 module.exports = {
 	name: 'rollcall',
 	description: 'ask who\'s gaming tonight',
 	execute(message) {
-        const attachment = new MessageAttachment('https://media.giphy.com/media/l2JJvaMbxKrKtOWVa/giphy.gif');
+        const attachment = new Discord.MessageAttachment('https://media.giphy.com/media/l2JJvaMbxKrKtOWVa/giphy.gif');
         message.channel.send(attachment)
             .then(function(message) {
                 message.react("👍");
