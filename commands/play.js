@@ -1,34 +1,61 @@
 const ytdl = require("ytdl-core");
+const {google} = require("googleapis");
+const youtube = google.youtube({
+    version: "v3"
+})
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const BASE_URL = "https://www.youtube.com/watch?v="
 
 module.exports = {
     name: "play",
-    description: "Play a song in your channel!",
+    description: "Play a song or playlist",
     async execute(message) {
         try {
+            // separate the command from the video or playlist
             const args = message.content.split(" ");
-            const queue = message.client.queue;
-            const serverQueue = message.client.queue.get(message.guild.id);
 
+            // get a handle to the voice channel
             const voiceChannel = message.member.voice.channel;
             if (!voiceChannel)
                 return message.channel.send(
-                "You need to be in a voice channel to play music!"
+                "You need to be in a voice channel to play music"
                 );
             const permissions = voiceChannel.permissionsFor(message.client.user);
             if (!permissions.has("CONNECT") || !permissions.has("SPEAK"))
             {
                 return message.channel.send(
-                    "I need the permissions to join and speak in your voice channel!"
+                    "I need the right permissions to join and speak in your voice channel!"
                 );
             }
 
-            const songInfo = await ytdl.getInfo(args[1]);
-            const song = {
-                title: songInfo.videoDetails.title,
-                url: songInfo.videoDetails.video_url
-            };
+            // if url contains playlist, add all videos
+            if (args[1].includes('playlist'))
+            {
+                // Get the playlist id
+                var url = new URL(args[1]);
+                var urlParams = new URLSearchParams(url.search);
+                var playlistId = urlParams.get('list')
 
-            this.addToQueue(song);
+                result = await youtube.playlistItems.list({
+                    key: GOOGLE_API_KEY,
+                    part: "contentDetails",
+                    playlistId: playlistId,
+                    maxResullt: 32
+                })
+
+                for (const video of result.data.items ) {
+                    const url = BASE_URL + video.contentDetails.videoId;
+                    await this.addToQueue(message, url);
+                }
+
+            } else {
+                await this.addToQueue(message, args[1]);
+            }
 
         } catch (error) {
             console.log(error);
@@ -54,9 +81,20 @@ module.exports = {
             })
             .on("error", error => console.error(error));
         dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-        serverQueue.textChannel.send(`Start playing: **${song.title}**`);
+        serverQueue.textChannel.send(`Playing: **${song.title}**`);
     },
-    addToQueue(song) {
+    async addToQueue(message, youtubeUrl) {
+
+        const queue = message.client.queue;
+        const serverQueue = message.client.queue.get(message.guild.id);
+        const voiceChannel = message.member.voice.channel;
+
+        const songInfo = await ytdl.getInfo(youtubeUrl);
+        const song = {
+            title: songInfo.videoDetails.title,
+            url: songInfo.videoDetails.video_url
+        };
+
         if (!serverQueue) {
             const queueContruct = {
                 textChannel: message.channel,
