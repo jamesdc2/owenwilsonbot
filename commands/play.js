@@ -33,12 +33,13 @@ module.exports = {
                 );
             }
 
+            var url = new URL(args[1]);
+            var urlParams = new URLSearchParams(url.search);
+
             // if url contains playlist, add all videos
-            if (args[1].includes('playlist'))
+            if (urlParams.has("list"))
             {
                 // Get the playlist id
-                var url = new URL(args[1]);
-                var urlParams = new URLSearchParams(url.search);
                 var playlistId = urlParams.get('list')
 
                 result = await youtube.playlistItems.list({
@@ -123,6 +124,7 @@ module.exports = {
             
         } else {
             serverQueue.songs.push(song);
+            console.log(`Adding ${song.title} to the audio queue`)
             return message.channel.send(`${song.title} has been added to the queue!`);
         }
     }
