@@ -46,7 +46,7 @@ module.exports = {
                     key: GOOGLE_API_KEY,
                     part: "contentDetails",
                     playlistId: playlistId,
-                    maxResullt: 32
+                    maxResult: 32
                 })
 
                 for (const video of result.data.items ) {
