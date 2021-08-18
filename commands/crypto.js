@@ -28,7 +28,7 @@ module.exports = {
 				var price = data[coin].USD;
 				var dir = price.CHANGEPCTDAY > 0 ? "up" : "down";
 
-				message.channel.send(`$${coin} is currently trading at ${price.PRICE}, *${dir}* ${price.CHANGEPCTDAY}% in the past 24 hours.`)
+				message.channel.send(`$${coin} is currently trading at ${price.PRICE}, **${dir}** ${price.CHANGEPCTDAY}% in the past 24 hours.`)
 				   .then(message => console.log(`Sent ${coin} trading info to #${message.channel.name} at ${moment().format()}!`))
 				   .catch(error => console.error(error));
 			}
