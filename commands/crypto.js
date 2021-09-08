@@ -36,7 +36,7 @@ module.exports = {
 			}
 
 			var dogePrice = parseFloat(data['DOGE'].USD.PRICE.substring(2));
-			message.channel.send(`@Kneeyuck#6782's dogecoin are currently worth $${406 * dogePrice}`);
+			message.channel.send(`<@Kneeyuck#6782>'s dogecoin are currently worth $${406 * dogePrice}`);
 		});
 		
 
