@@ -2,6 +2,8 @@ const endPoint = 'https://min-api.cryptocompare.com/data';
 const fetch = require('node-fetch');
 const moment = require('moment');
 
+const nicksId = '687754405138661380';
+
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
@@ -36,7 +38,7 @@ module.exports = {
 			}
 
 			var dogePrice = parseFloat(data['DOGE'].USD.PRICE.substring(2));
-			message.channel.send(`<@Kneeyuck#6782>'s dogecoin are currently worth $${406 * dogePrice}`);
+			message.channel.send(`<@${nicksId}>'s dogecoin are currently worth $${406 * dogePrice}`);
 		});
 		
 
