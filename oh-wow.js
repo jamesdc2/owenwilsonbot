@@ -94,6 +94,16 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
         member.roles.add(role);
         console.log(`Added BAD BOI role to ${member.displayName}`)
+    }
+
+    if (reaction.message.author.bot && reaction.emoji.name === "👍" && !user.bot)
+    {
+        const role = reaction.message.guild.roles.cache.find(r => r.name === "Gamer");
+
+        const member = reaction.message.guild.members.cache.find(member => member.id === user.id )
+
+        member.roles.add(role);
+        console.log(`Added BAD BOI role to ${member.displayName}`)
     } 
 
 });
