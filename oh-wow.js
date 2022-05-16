@@ -94,6 +94,10 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
         member.roles.add(role);
         console.log(`Added BAD BOI role to ${member.displayName}`)
+        setTimeout( () => {
+            member.roles.remove(role);
+            console.log(`Removed BAD BOI role from ${member.displayName}`);
+        }, 1000 * 60 * 60 * 24);
     }
 
     if (reaction.message.author.bot && reaction.emoji.name === "👍" && !user.bot)
@@ -103,7 +107,13 @@ client.on('messageReactionAdd', async (reaction, user) => {
         const member = reaction.message.guild.members.cache.find(member => member.id === user.id )
 
         member.roles.add(role);
-        console.log(`Added BAD BOI role to ${member.displayName}`)
+
+        console.log(`Added GAMER role to ${member.displayName}`)
+
+        setTimeout( () => {
+            member.roles.remove(role);
+            console.log(`Removed GAMER role from ${member.displayName}`);
+        }, 1000 * 60 * 60 * 24);
     } 
 
 });
