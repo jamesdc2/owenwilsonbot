@@ -97,7 +97,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
         setTimeout( () => {
             member.roles.remove(role);
             console.log(`Removed BAD BOI role from ${member.displayName}`);
-        }, 1000 * 60 * 60 * 24);
+        }, 1000 * 60 * 60 * 8);
     }
 
     if (reaction.message.author.bot && reaction.emoji.name === "👍" && !user.bot)
@@ -113,7 +113,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
         setTimeout( () => {
             member.roles.remove(role);
             console.log(`Removed GAMER role from ${member.displayName}`);
-        }, 1000 * 60 * 60 * 24);
+        }, 1000 * 60 * 60 * 8);
     } 
 
 });
