@@ -16,7 +16,7 @@ module.exports = {
 	execute(message) {
 
         // code goes here
-		const syms = ["ETH", "DOGE"];
+		const syms = ["ETH", "DOGE", "FARTCOIN"];
 		const headers  = { authorization: `Apikey ${CC_API_KEY}` }
 
 		fetch(`${endPoint}/pricemultifull?fsyms=${syms.join(',')}&tsyms=USD`, {
